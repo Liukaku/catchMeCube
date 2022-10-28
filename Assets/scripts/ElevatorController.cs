@@ -5,9 +5,11 @@ using UnityEngine;
 public class ElevatorController : MonoBehaviour
 {
     private float m_travelDistance = 0;
-    private float m_maxDistance = 15.0f;
+    public float m_maxDistance = 15.0f;
 
     public float m_speed = 8.0f;
+
+    private Rigidbody m_Rigidbody;
 
     private Coroutine m_reverseCorutine;
 
@@ -15,13 +17,14 @@ public class ElevatorController : MonoBehaviour
     // Start is called before the first frame update
     private IEnumerator Start()
     {
+        m_Rigidbody = GetComponent<Rigidbody>();
         enabled = false;
         yield return new WaitForSeconds(3.0f);
         enabled = true;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if(m_travelDistance >= m_maxDistance)
         {
@@ -31,9 +34,13 @@ public class ElevatorController : MonoBehaviour
             }
         } else
         {
-            float distanceStep = m_speed * Time.deltaTime;
+            float distanceStep = m_speed * Time.fixedDeltaTime;
             m_travelDistance += Mathf.Abs(distanceStep);
-            transform.Translate(0, distanceStep, 0);
+
+            Vector3 elevatorPos = m_Rigidbody.position;
+            elevatorPos.y += distanceStep;
+
+            m_Rigidbody.MovePosition(elevatorPos);
         }
 
     }
@@ -45,4 +52,5 @@ public class ElevatorController : MonoBehaviour
         m_speed = -m_speed;
         m_reverseCorutine = null;
     }
+
 }
