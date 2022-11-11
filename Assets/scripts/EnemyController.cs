@@ -23,6 +23,11 @@ public class EnemyController : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 moveTowards = (m_player.transform.position - transform.position).normalized;
+        moveTowards.y = 0;
         m_rb.AddForce(moveTowards * speed);
+        if (transform.position.y <= -3)
+        {
+            Destroy(gameObject);
+        }
     }
 }
