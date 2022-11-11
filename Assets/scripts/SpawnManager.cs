@@ -36,7 +36,6 @@ public class SpawnManager : MonoBehaviour
             spawnHeight,
             Random.Range(spawnRangeZ[0], spawnRangeZ[1])
     );
-
             Instantiate(enemyPrefab, spawnPosition, enemyPrefab.transform.rotation);
         }
 
