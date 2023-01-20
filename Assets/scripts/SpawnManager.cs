@@ -6,11 +6,14 @@ public class SpawnManager : MonoBehaviour
 {
 
     public GameObject enemyPrefab;
+    public GameObject powerUpPrefab;
     public Vector2 spawnRangeX;
     public Vector2 spawnRangeZ;
     public int spawnHeight;
 
     private int m_enemyCount;
+
+    private int m_powerUpCount;
 
     private int m_waveCount = 1;
 
@@ -20,11 +23,18 @@ public class SpawnManager : MonoBehaviour
     void Update()
     {
         m_enemyCount = FindObjectsOfType<EnemyController>().Length;
+        m_powerUpCount = FindObjectsOfType<PowerUpManager>().Length;
 
         if (m_enemyCount == 0)
         {
             SpawnEnemy();
         }
+
+        if (m_powerUpCount == 0)
+        {
+            StartCoroutine(SpeedCountDown());
+        }
+
     }
 
     void SpawnEnemy()
@@ -44,4 +54,26 @@ public class SpawnManager : MonoBehaviour
 
         Debug.Log(m_waveCount);
     }
+
+    private IEnumerator SpeedCountDown()
+    {
+
+        yield return new WaitForSeconds(10);
+
+        if (m_powerUpCount == 0)
+        {
+            SpawnPowerUp();
+        }
+    }
+    void SpawnPowerUp()
+    {
+        Vector3 spawnPosition = new Vector3(
+        Random.Range(spawnRangeX[0], spawnRangeX[1]),
+        0.8f,
+        Random.Range(spawnRangeZ[0], spawnRangeZ[1])
+        );
+        Instantiate(powerUpPrefab, spawnPosition, enemyPrefab.transform.rotation);
+    }
+
+
 }

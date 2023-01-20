@@ -16,7 +16,7 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        speed = Random.Range(5, 30);
+        speed = Random.Range(10, 30);
         m_player = GameObject.Find("Player");
     }
 
@@ -29,6 +29,16 @@ public class EnemyController : MonoBehaviour
         if (transform.position.y <= -3)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && m_player.GetComponent<PlayerController>().speedModifier == 1)
+        {
+            Rigidbody playerRb = collision.gameObject.GetComponent<Rigidbody>();
+            Vector3 awayFromEnemy = collision.transform.position - transform.position;
+            playerRb.AddForce(awayFromEnemy * 5.0f, ForceMode.Impulse);
         }
     }
 }
